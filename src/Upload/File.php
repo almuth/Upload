@@ -114,7 +114,7 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
      * @throws \RuntimeException                  If file uploads are disabled in the php.ini file
      * @throws \InvalidArgumentException          If $_FILES[] does not contain key
      */
-    public function __construct($key, \Upload\StorageInterface $storage)
+    public function __construct($key, \Almuth\Upload\StorageInterface $storage)
     {
         // Check if file uploads are allowed
         if (ini_get('file_uploads') == false) {
@@ -138,7 +138,7 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
                     continue;
                 }
 
-                $this->objects[] = \Upload\FileInfo::createFromFactory(
+                $this->objects[] = \Almuth\Upload\FileInfo::createFromFactory(
                     $_FILES[$key]['tmp_name'][$index],
                     $_FILES[$key]['name'][$index]
                 );
@@ -152,7 +152,7 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
                 );
             }
 
-            $this->objects[] = \Upload\FileInfo::createFromFactory(
+            $this->objects[] = \Almuth\Upload\FileInfo::createFromFactory(
                 $_FILES[$key]['tmp_name'],
                 $_FILES[$key]['name']
             );
@@ -240,7 +240,7 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
      * @param  \Upload\FileInfoInterface $file
      * @return \Upload\File              Self
      */
-    protected function applyCallback($callbackName, \Upload\FileInfoInterface $file)
+    protected function applyCallback($callbackName, \Almuth\Upload\FileInfoInterface $file)
     {
         if (in_array($callbackName, array('beforeValidation', 'afterValidation', 'beforeUpload', 'afterUpload')) === true) {
             if (isset($this->$callbackName) === true) {
@@ -274,7 +274,7 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
      * @param  \Upload\ValidationInterface $validation
      * @return \Upload\File                Self
      */
-    public function addValidation(\Upload\ValidationInterface $validation)
+    public function addValidation(\Almuth\Upload\ValidationInterface $validation)
     {
         $this->validations[] = $validation;
 

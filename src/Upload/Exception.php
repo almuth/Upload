@@ -14,7 +14,7 @@ class Exception extends \RuntimeException
      * @param string                    $message  The Exception message
      * @param \Upload\FileInfoInterface $fileInfo The related file instance
      */
-    public function __construct($message, \Upload\FileInfoInterface $fileInfo = null)
+    public function __construct($message, \Almuth\Upload\FileInfoInterface $fileInfo = null)
     {
         $this->fileInfo = $fileInfo;
 

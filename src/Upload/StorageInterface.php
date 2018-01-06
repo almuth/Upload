@@ -48,5 +48,5 @@ interface StorageInterface
      * @param  \Upload\FileInfoInterface $fileInfo
      * @throws \Exception                If upload fails
      */
-    public function upload(\Upload\FileInfoInterface $fileInfo);
+    public function upload(\Almuth\Upload\FileInfoInterface $fileInfo);
 }

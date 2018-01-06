@@ -66,10 +66,10 @@ class Mimetype implements \Almuth\Upload\ValidationInterface
      * @param  \Upload\FileInfoInterface  $fileInfo
      * @throws \RuntimeException          If validation fails
      */
-    public function validate(\Upload\FileInfoInterface $fileInfo)
+    public function validate(\Almuth\Upload\FileInfoInterface $fileInfo)
     {
         if (in_array($fileInfo->getMimetype(), $this->mimetypes) === false) {
-            throw new \Upload\Exception(sprintf('Invalid mimetype. Must be one of: %s', implode(', ', $this->mimetypes)), $fileInfo);
+            throw new \Almuth\Upload\Exception(sprintf('Invalid mimetype. Must be one of: %s', implode(', ', $this->mimetypes)), $fileInfo);
         }
     }
 }

@@ -64,12 +64,12 @@ class Size implements \Almuth\Upload\ValidationInterface
     public function __construct($maxSize, $minSize = 0)
     {
         if (is_string($maxSize)) {
-            $maxSize = \Upload\File::humanReadableToBytes($maxSize);
+            $maxSize = \Almuth\Upload\File::humanReadableToBytes($maxSize);
         }
         $this->maxSize = $maxSize;
 
         if (is_string($minSize)) {
-            $minSize = \Upload\File::humanReadableToBytes($minSize);
+            $minSize = \Almuth\Upload\File::humanReadableToBytes($minSize);
         }
         $this->minSize = $minSize;
     }
@@ -80,16 +80,16 @@ class Size implements \Almuth\Upload\ValidationInterface
      * @param  \Upload\FileInfoInterface  $fileInfo
      * @throws \RuntimeException          If validation fails
      */
-    public function validate(\Upload\FileInfoInterface $fileInfo)
+    public function validate(\Almuth\Upload\FileInfoInterface $fileInfo)
     {
         $fileSize = $fileInfo->getSize();
 
         if ($fileSize < $this->minSize) {
-            throw new \Upload\Exception(sprintf('File size is too small. Must be greater than or equal to: %s', $this->minSize), $fileInfo);
+            throw new \Almuth\Upload\Exception(sprintf('File size is too small. Must be greater than or equal to: %s', $this->minSize), $fileInfo);
         }
 
         if ($fileSize > $this->maxSize) {
-            throw new \Upload\Exception(sprintf('File size is too large. Must be less than: %s', $this->maxSize), $fileInfo);
+            throw new \Almuth\Upload\Exception(sprintf('File size is too large. Must be less than: %s', $this->maxSize), $fileInfo);
         }
     }
 }

@@ -71,12 +71,12 @@ class Extension implements \Almuth\Upload\ValidationInterface
      * @param  \Upload\FileInfoInterface $fileInfo
      * @throws \RuntimeException         If validation fails
      */
-    public function validate(\Upload\FileInfoInterface $fileInfo)
+    public function validate(\Almuth\Upload\FileInfoInterface $fileInfo)
     {
         $fileExtension = strtolower($fileInfo->getExtension());
 
         if (in_array($fileExtension, $this->allowedExtensions) === false) {
-            throw new \Upload\Exception(sprintf('Invalid file extension. Must be one of: %s', implode(', ', $this->allowedExtensions)), $fileInfo);
+            throw new \Almuth\Upload\Exception(sprintf('Invalid file extension. Must be one of: %s', implode(', ', $this->allowedExtensions)), $fileInfo);
         }
     }
 }
