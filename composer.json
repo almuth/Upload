@@ -1,15 +1,20 @@
 {
-    "name": "codeguy/upload",
+    "name": "almuth/upload",
     "type": "library",
     "description": "Handle file uploads with extensible validation and storage strategies",
     "keywords": ["upload", "validation", "file"],
-    "homepage": "http://github.com/codeguy/Upload",
+    "homepage": "http://github.com/almuth/Upload",
     "license": "MIT",
     "authors": [
         {
             "name": "Josh Lockhart",
             "email": "info@joshlockhart.com",
             "homepage": "https://github.com/codeguy/"
+        },
+        {
+            "name": "Almuth",
+            "email": "almuth@jp.web.id",
+            "homepage": "https://github.com/almuth/"
         }
     ],
     "require": {
