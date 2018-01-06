@@ -80,15 +80,15 @@ class FileSystem implements \Almuth\Upload\StorageInterface
      * @throws \Upload\Exception               If overwrite is false and file already exists
      * @throws \Upload\Exception               If error moving file to destination
      */
-    public function upload(\Upload\FileInfoInterface $fileInfo)
+    public function upload(\Almuth\Upload\FileInfoInterface $fileInfo)
     {
         $destinationFile = $this->directory . $fileInfo->getNameWithExtension();
         if ($this->overwrite === false && file_exists($destinationFile) === true) {
-            throw new \Upload\Exception('File already exists', $fileInfo);
+            throw new \Almuth\Upload\Exception('File already exists', $fileInfo);
         }
 
         if ($this->moveUploadedFile($fileInfo->getPathname(), $destinationFile) === false) {
-            throw new \Upload\Exception('File could not be moved to final destination.', $fileInfo);
+            throw new \Almuth\Upload\Exception('File could not be moved to final destination.', $fileInfo);
         }
     }
 
