@@ -1,8 +1,8 @@
 # Upload
 
-[![Build Status](https://img.shields.io/travis/brandonsavage/Upload.svg?style=flat-square)](https://travis-ci.org/brandonsavage/Upload)
-[![Latest Version](https://img.shields.io/github/release/brandonsavage/Upload.svg?style=flat-square)](https://github.com/brandonsavage/Upload/releases)
-[![Total Downloads](https://img.shields.io/packagist/dt/codeguy/upload.svg?style=flat-square)](https://packagist.org/packages/codeguy/upload)
+[![Build Status](https://img.shields.io/travis/almuth/Upload.svg?style=flat-square)](https://travis-ci.org/almuth/Upload)
+[![Latest Version](https://img.shields.io/github/release/almuth/Upload.svg?style=flat-square)](https://github.com/almuth/Upload/releases)
+[![Total Downloads](https://img.shields.io/packagist/dt/almuth/upload.svg?style=flat-square)](https://packagist.org/almuth/codeguy/upload)
 
 This component simplifies file validation and uploading.
 
