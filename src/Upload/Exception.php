@@ -1,5 +1,5 @@
 <?php
-namespace Upload;
+namespace Almuth\Upload;
 
 class Exception extends \RuntimeException
 {

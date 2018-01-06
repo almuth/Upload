@@ -28,7 +28,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-namespace Upload\Validation;
+namespace Almuth\Upload\Validation;
 
 /**
  * Validate File Extension
@@ -41,7 +41,7 @@ namespace Upload\Validation;
  * @author  Alex Kucherenko <kucherenko.email@gmail.com>
  * @package Upload
  */
-class Extension implements \Upload\ValidationInterface
+class Extension implements \Almuth\Upload\ValidationInterface
 {
     /**
      * Array of acceptable file extensions without leading dots

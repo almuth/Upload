@@ -1,10 +1,10 @@
 <?php
 
-namespace Upload\Validation;
+namespace Almuth\Upload\Validation;
 
-use Upload\Exception;
-use Upload\FileInfoInterface;
-use Upload\ValidationInterface;
+use Almuth\Upload\Exception;
+use Almuth\Upload\FileInfoInterface;
+use Almuth\Upload\ValidationInterface;
 
 class Dimensions implements ValidationInterface
 {

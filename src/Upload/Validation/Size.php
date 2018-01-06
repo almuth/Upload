@@ -28,7 +28,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-namespace Upload\Validation;
+namespace Almuth\Upload\Validation;
 
 /**
  * Validate Upload File Size
@@ -41,7 +41,7 @@ namespace Upload\Validation;
  * @since   1.0.0
  * @package Upload
  */
-class Size implements \Upload\ValidationInterface
+class Size implements \Almuth\Upload\ValidationInterface
 {
     /**
      * Minimum acceptable file size (bytes)

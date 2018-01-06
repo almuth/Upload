@@ -25,6 +25,6 @@
         "phpunit/phpunit": "3.7.*"
     },
     "autoload": {
-        "psr-4": { "Upload\\": "src/Upload" }
+        "psr-4": { "Almuth\\Upload\\": "src/Upload" }
     }
 }

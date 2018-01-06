@@ -28,7 +28,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-namespace Upload\Storage;
+namespace Almuth\Upload\Storage;
 
 /**
  * FileSystem Storage
@@ -39,7 +39,7 @@ namespace Upload\Storage;
  * @since   1.0.0
  * @package Upload
  */
-class FileSystem implements \Upload\StorageInterface
+class FileSystem implements \Almuth\Upload\StorageInterface
 {
     /**
      * Path to upload destination directory (with trailing slash)

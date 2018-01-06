@@ -28,7 +28,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-namespace Upload;
+namespace Almuth\Upload;
 
 /**
  * File Information
@@ -90,7 +90,7 @@ class FileInfo extends \SplFileInfo implements \Upload\FileInfoInterface
 
     /**
      * Set file name (without extension)
-     * 
+     *
      * It also makes sure file name is safe
      *
      * @param  string           $name
