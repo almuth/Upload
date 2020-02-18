@@ -316,7 +316,7 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
             foreach ($this->validations as $validation) {
                 try {
                     $validation->validate($fileInfo);
-                } catch (\Upload\Exception $e) {
+                } catch (\Almuth\Upload\Exception $e) {
                     $this->errors[] = sprintf(
                         '%s: %s',
                         $fileInfo->getNameWithExtension(),
@@ -379,7 +379,7 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
     public function upload()
     {
         if ($this->isValid() === false) {
-            throw new \Upload\Exception('File validation failed');
+            throw new \Almuth\Upload\Exception('File validation failed');
         }
 
         foreach ($this->objects as $fileInfo) {
