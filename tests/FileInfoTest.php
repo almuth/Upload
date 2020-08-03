@@ -1,14 +1,18 @@
-<?php
-class FileInfoTest extends PHPUnit_Framework_TestCase
+<?php declare(strict_types=1);
+
+use PHPUnit\Framework\TestCase;
+use Almuth\Upload\FileInfo;
+
+class FileInfoTest extends TestCase
 {
     protected $fileWithExtension;
 
     protected $fileWithoutExtension;
 
-    public function setUp()
+    public function setUp():void
     {
-        $this->fileWithExtension = new \Upload\FileInfo(dirname(__FILE__) . '/assets/foo.txt', 'foo.txt');
-        $this->fileWithoutExtension = new \Upload\FileInfo(dirname(__FILE__) . '/assets/foo_wo_ext', 'foo_wo_ext');
+        $this->fileWithExtension = new FileInfo(dirname(__FILE__) . '/assets/foo.txt', 'foo.txt');
+        $this->fileWithoutExtension = new FileInfo(dirname(__FILE__) . '/assets/foo_wo_ext', 'foo_wo_ext');
     }
 
     public function testConstructor()

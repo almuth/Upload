@@ -13,7 +13,7 @@
         },
         {
             "name": "Almuth",
-            "email": "almuth@jp.web.id",
+            "email": "almuth@nusacart.com",
             "homepage": "https://github.com/almuth/"
         }
     ],
@@ -22,9 +22,13 @@
         "ext-fileinfo": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "3.7.*"
+        "phpunit/phpunit": "^9",
+        "aws/aws-sdk-php": "^3.147"
     },
     "autoload": {
         "psr-4": { "Almuth\\Upload\\": "src/Upload" }
-    }
+    },
+	"suggest": {
+		"aws/aws-sdk-php": "To use S3 Storage"
+	}
 }

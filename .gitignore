@@ -1,4 +1,5 @@
 composer.lock
+tests/s3options.php
 vendor/
 .idea
 .DS_Store

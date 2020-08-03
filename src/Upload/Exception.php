@@ -4,7 +4,7 @@ namespace Almuth\Upload;
 class Exception extends \RuntimeException
 {
     /**
-     * @var \Upload\FileInfoInterface
+     * @var \Almuth\Upload\FileInfoInterface
      */
     protected $fileInfo;
 
@@ -12,9 +12,9 @@ class Exception extends \RuntimeException
      * Constructor
      *
      * @param string                    $message  The Exception message
-     * @param \Upload\FileInfoInterface $fileInfo The related file instance
+     * @param \Almuth\Upload\FileInfoInterface $fileInfo The related file instance
      */
-    public function __construct($message, \Almuth\Upload\FileInfoInterface $fileInfo = null)
+    public function __construct($message, FileInfoInterface $fileInfo = null)
     {
         $this->fileInfo = $fileInfo;
 
@@ -24,7 +24,7 @@ class Exception extends \RuntimeException
     /**
      * Get related file
      *
-     * @return \Upload\FileInfoInterface
+     * @return \Almuth\Upload\FileInfoInterface
      */
     public function getFileInfo()
     {

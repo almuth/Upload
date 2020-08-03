@@ -76,9 +76,9 @@ class FileSystem implements \Almuth\Upload\StorageInterface
     /**
      * Upload
      *
-     * @param  \Upload\FileInfoInterface $file The file object to upload
-     * @throws \Upload\Exception               If overwrite is false and file already exists
-     * @throws \Upload\Exception               If error moving file to destination
+     * @param  \Almuth\Upload\FileInfoInterface $file The file object to upload
+     * @throws \Almuth\Upload\Exception               If overwrite is false and file already exists
+     * @throws \Almuth\Upload\Exception               If error moving file to destination
      */
     public function upload(\Almuth\Upload\FileInfoInterface $fileInfo)
     {

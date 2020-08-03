@@ -37,7 +37,7 @@ namespace Almuth\Upload;
  * @since   2.0.0
  * @package Upload
  */
-class FileInfo extends \SplFileInfo implements \Almuth\Upload\FileInfoInterface
+class FileInfo extends \SplFileInfo implements FileInfoInterface
 {
     /**
      * Factory method that returns new instance of \FileInfoInterface
@@ -216,7 +216,7 @@ class FileInfo extends \SplFileInfo implements \Almuth\Upload\FileInfoInterface
     public static function createFromFactory($tmpName, $name = null) {
         if (isset(static::$factory) === true) {
             $result = call_user_func_array(static::$factory, array($tmpName, $name));
-            if ($result instanceof \Almuth\Upload\FileInfoInterface === false) {
+            if ($result instanceof FileInfoInterface === false) {
                 throw new \RuntimeException('FileInfo factory must return instance of \Upload\FileInfoInterface.');
             }
 

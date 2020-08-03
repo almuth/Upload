@@ -21,8 +21,8 @@ When the HTML form is submitted, the server-side PHP code can validate and uploa
 
 ```php
 <?php
-$storage = new \Upload\Storage\FileSystem('/path/to/directory');
-$file = new \Upload\File('foo', $storage);
+$storage = new \Almuth\Upload\Storage\FileSystem('/path/to/directory');
+$file = new \Almuth\Upload\File('foo', $storage);
 
 // Optionally you can rename the file on upload
 $new_filename = uniqid();
@@ -32,13 +32,13 @@ $file->setName($new_filename);
 // MimeType List => http://www.iana.org/assignments/media-types/media-types.xhtml
 $file->addValidations(array(
     // Ensure file is of type "image/png"
-    new \Upload\Validation\Mimetype('image/png'),
+    new \Almuth\Upload\Validation\Mimetype('image/png'),
 
     //You can also add multi mimetype validation
-    //new \Upload\Validation\Mimetype(array('image/png', 'image/gif'))
+    //new \Almuth\Upload\Validation\Mimetype(array('image/png', 'image/gif'))
 
     // Ensure file is no larger than 5M (use "B", "K", M", or "G")
-    new \Upload\Validation\Size('5M')
+    new \Almuth\Upload\Validation\Size('5M')
 ));
 
 // Access data about the file that has been uploaded

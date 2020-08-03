@@ -60,19 +60,19 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
 
     /**
      * Storage delegate
-     * @var \Upload\StorageInterface
+     * @var \Almuth\Upload\StorageInterface
      */
     protected $storage;
 
     /**
      * File information
-     * @var array[\Upload\FileInfoInterface]
+     * @var array[\Almuth\Upload\FileInfoInterface]
      */
     protected $objects = array();
 
     /**
      * Validations
-     * @var array[\Upload\ValidationInterface]
+     * @var array[\Almuth\Upload\ValidationInterface]
      */
     protected $validations = array();
 
@@ -110,11 +110,11 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
      * Constructor
      *
      * @param  string                    $key     The $_FILES[] key
-     * @param  \Upload\StorageInterface  $storage The upload delegate instance
+     * @param  \Almuth\Upload\StorageInterface  $storage The upload delegate instance
      * @throws \RuntimeException                  If file uploads are disabled in the php.ini file
      * @throws \InvalidArgumentException          If $_FILES[] does not contain key
      */
-    public function __construct($key, \Almuth\Upload\StorageInterface $storage)
+    public function __construct($key, StorageInterface $storage)
     {
         // Check if file uploads are allowed
         if (ini_get('file_uploads') == false) {
@@ -138,7 +138,7 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
                     continue;
                 }
 
-                $this->objects[] = \Almuth\Upload\FileInfo::createFromFactory(
+                $this->objects[] = FileInfo::createFromFactory(
                     $_FILES[$key]['tmp_name'][$index],
                     $_FILES[$key]['name'][$index]
                 );
@@ -152,7 +152,7 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
                 );
             }
 
-            $this->objects[] = \Almuth\Upload\FileInfo::createFromFactory(
+            $this->objects[] = FileInfo::createFromFactory(
                 $_FILES[$key]['tmp_name'],
                 $_FILES[$key]['name']
             );
@@ -169,7 +169,7 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
      * Set `beforeValidation` callable
      *
      * @param  callable                  $callable Should accept one `\Upload\FileInfoInterface` argument
-     * @return \Upload\File                        Self
+     * @return \Almuth\Upload\File                        Self
      * @throws \InvalidArgumentException           If argument is not a Closure or invokable object
      */
     public function beforeValidate($callable)
@@ -186,7 +186,7 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
      * Set `afterValidation` callable
      *
      * @param  callable                  $callable Should accept one `\Upload\FileInfoInterface` argument
-     * @return \Upload\File                        Self
+     * @return \Almuth\Upload\File                        Self
      * @throws \InvalidArgumentException           If argument is not a Closure or invokable object
      */
     public function afterValidate($callable)
@@ -203,7 +203,7 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
      * Set `beforeUpload` callable
      *
      * @param  callable                  $callable Should accept one `\Upload\FileInfoInterface` argument
-     * @return \Upload\File                        Self
+     * @return \Almuth\Upload\File                        Self
      * @throws \InvalidArgumentException           If argument is not a Closure or invokable object
      */
     public function beforeUpload($callable)
@@ -220,7 +220,7 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
      * Set `afterUpload` callable
      *
      * @param  callable                  $callable Should accept one `\Upload\FileInfoInterface` argument
-     * @return \Upload\File                        Self
+     * @return \Almuth\Upload\File                        Self
      * @throws \InvalidArgumentException           If argument is not a Closure or invokable object
      */
     public function afterUpload($callable)
@@ -237,10 +237,10 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
      * Apply callable
      *
      * @param  string                    $callbackName
-     * @param  \Upload\FileInfoInterface $file
-     * @return \Upload\File              Self
+     * @param  \Almuth\Upload\FileInfoInterface $file
+     * @return \Almuth\Upload\File              Self
      */
-    protected function applyCallback($callbackName, \Almuth\Upload\FileInfoInterface $file)
+    protected function applyCallback($callbackName, FileInfoInterface $file)
     {
         if (in_array($callbackName, array('beforeValidation', 'afterValidation', 'beforeUpload', 'afterUpload')) === true) {
             if (isset($this->$callbackName) === true) {
@@ -256,8 +256,8 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Add file validations
      *
-     * @param  array[\Upload\ValidationInterface] $validations
-     * @return \Upload\File                       Self
+     * @param  array[\Almuth\Upload\ValidationInterface] $validations
+     * @return \Almuth\Upload\File                       Self
      */
     public function addValidations(array $validations)
     {
@@ -271,10 +271,10 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Add file validation
      *
-     * @param  \Upload\ValidationInterface $validation
-     * @return \Upload\File                Self
+     * @param  \Almuth\Upload\ValidationInterface $validation
+     * @return \Almuth\Upload\File                Self
      */
-    public function addValidation(\Almuth\Upload\ValidationInterface $validation)
+    public function addValidation(ValidationInterface $validation)
     {
         $this->validations[] = $validation;
 
@@ -284,7 +284,7 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
     /**
      * Get file validations
      *
-     * @return array[\Upload\ValidationInterface]
+     * @return array[\Almuth\Upload\ValidationInterface]
      */
     public function getValidations()
     {
@@ -316,7 +316,7 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
             foreach ($this->validations as $validation) {
                 try {
                     $validation->validate($fileInfo);
-                } catch (\Almuth\Upload\Exception $e) {
+                } catch (Exception $e) {
                     $this->errors[] = sprintf(
                         '%s: %s',
                         $fileInfo->getNameWithExtension(),
@@ -373,13 +373,13 @@ class File implements \ArrayAccess, \IteratorAggregate, \Countable
      * Upload file (delegated to storage object)
      *
      * @return bool
-     * @throws \Upload\Exception If validation fails
-     * @throws \Upload\Exception If upload fails
+     * @throws \Almuth\Upload\Exception If validation fails
+     * @throws \Almuth\Upload\Exception If upload fails
      */
     public function upload()
     {
         if ($this->isValid() === false) {
-            throw new \Almuth\Upload\Exception('File validation failed');
+            throw new Exception('File validation failed');
         }
 
         foreach ($this->objects as $fileInfo) {

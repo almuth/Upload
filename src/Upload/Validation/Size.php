@@ -30,6 +30,11 @@
  */
 namespace Almuth\Upload\Validation;
 
+use \Almuth\Upload\ValidationInterface;
+use \Almuth\Upload\FileInfoInterface;
+use \Almuth\Upload\File;
+use \Almuth\Upload\Exception;
+
 /**
  * Validate Upload File Size
  *
@@ -41,7 +46,7 @@ namespace Almuth\Upload\Validation;
  * @since   1.0.0
  * @package Upload
  */
-class Size implements \Almuth\Upload\ValidationInterface
+class Size implements ValidationInterface
 {
     /**
      * Minimum acceptable file size (bytes)
@@ -64,12 +69,12 @@ class Size implements \Almuth\Upload\ValidationInterface
     public function __construct($maxSize, $minSize = 0)
     {
         if (is_string($maxSize)) {
-            $maxSize = \Almuth\Upload\File::humanReadableToBytes($maxSize);
+            $maxSize = File::humanReadableToBytes($maxSize);
         }
         $this->maxSize = $maxSize;
 
         if (is_string($minSize)) {
-            $minSize = \Almuth\Upload\File::humanReadableToBytes($minSize);
+            $minSize = File::humanReadableToBytes($minSize);
         }
         $this->minSize = $minSize;
     }
@@ -77,19 +82,19 @@ class Size implements \Almuth\Upload\ValidationInterface
     /**
      * Validate
      *
-     * @param  \Upload\FileInfoInterface  $fileInfo
+     * @param  \Almuth\Upload\FileInfoInterface  $fileInfo
      * @throws \RuntimeException          If validation fails
      */
-    public function validate(\Almuth\Upload\FileInfoInterface $fileInfo)
+    public function validate(FileInfoInterface $fileInfo)
     {
         $fileSize = $fileInfo->getSize();
 
         if ($fileSize < $this->minSize) {
-            throw new \Almuth\Upload\Exception(sprintf('File size is too small. Must be greater than or equal to: %s', $this->minSize), $fileInfo);
+            throw new Exception(sprintf('File size is too small. Must be greater than or equal to: %s', $this->minSize), $fileInfo);
         }
 
         if ($fileSize > $this->maxSize) {
-            throw new \Almuth\Upload\Exception(sprintf('File size is too large. Must be less than: %s', $this->maxSize), $fileInfo);
+            throw new Exception(sprintf('File size is too large. Must be less than: %s', $this->maxSize), $fileInfo);
         }
     }
 }

@@ -30,6 +30,10 @@
  */
 namespace Almuth\Upload\Validation;
 
+use \Almuth\Upload\ValidationInterface;
+use \Almuth\Upload\FileInfoInterface;
+use \Almuth\Upload\Exception;
+
 /**
  * Validate Upload Media Type
  *
@@ -39,7 +43,7 @@ namespace Almuth\Upload\Validation;
  * @since   1.0.0
  * @package Upload
  */
-class Mimetype implements \Almuth\Upload\ValidationInterface
+class Mimetype implements ValidationInterface
 {
     /**
      * Valid media types
@@ -63,13 +67,13 @@ class Mimetype implements \Almuth\Upload\ValidationInterface
     /**
      * Validate
      *
-     * @param  \Upload\FileInfoInterface  $fileInfo
+     * @param  \Almuth\Upload\FileInfoInterface  $fileInfo
      * @throws \RuntimeException          If validation fails
      */
-    public function validate(\Almuth\Upload\FileInfoInterface $fileInfo)
+    public function validate(FileInfoInterface $fileInfo)
     {
         if (in_array($fileInfo->getMimetype(), $this->mimetypes) === false) {
-            throw new \Almuth\Upload\Exception(sprintf('Invalid mimetype. Must be one of: %s', implode(', ', $this->mimetypes)), $fileInfo);
+            throw new Exception(sprintf('Invalid mimetype. Must be one of: %s', implode(', ', $this->mimetypes)), $fileInfo);
         }
     }
 }
