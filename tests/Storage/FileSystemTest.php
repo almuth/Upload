@@ -1,92 +1,93 @@
 <?php
 
+use Almuth\Upload\Exception as UploadException;
+use Almuth\Upload\FileInfo;
+use Almuth\Upload\Storage\FileSystem;
 use PHPUnit\Framework\TestCase;
 
 class FileSystemTest extends TestCase
 {
-    /**
-     * Setup (each test)
-     */
-    public function setUp():void
-    {
-        // Path to test assets
-        $this->assetsDirectory = dirname(__DIR__) . '/assets';
+  private string $assetsDirectory;
+  private string $uploadDir;
 
-        // Reset $_FILES superglobal
-        $_FILES['foo'] = array(
-            'name' => 'foo.txt',
-            'tmp_name' => $this->assetsDirectory . '/foo.txt',
-            'error' => 0
-        );
+  /**
+   * Setup (each test)
+   */
+  public function setUp(): void
+  {
+    // Path to test assets
+    $this->assetsDirectory = dirname(__DIR__) . '/assets';
+    $this->uploadDir = $this->assetsDirectory . '/uploads';
+    if ( !is_dir($this->uploadDir)){
+      mkdir($this->uploadDir, 0777, true);
     }
 
-    public function testInstantiationWithValidDirectory()
-    {
-        try {
-            /*$storage = $this->getMock(
-                '\Almuth\Upload\Storage\FileSystem',
-                array('upload'),
-                array($this->assetsDirectory)
-            );*/
-			$storage = $this->createMock(\Almuth\Upload\Storage\FileSystem::class);
-			$storage->expects($this->any())->method('upload')->with($this->assetsDirectory);
-        } catch(\InvalidArgumentException $e) {
-            $this->fail('Unexpected argument thrown during instantiation with valid directory');
-        }
+    foreach(glob($this->uploadDir . '/*') as $uf){
+      unlink($uf);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testInstantiationWithInvalidDirectory()
-    {
-        /*$storage = $this->getMock(
-            '\Almuth\Upload\Storage\FileSystem',
-            array('upload'),
-            array('/foo')
-        );*/
-		$storage = $this->createMock(\Almuth\Upload\Storage\FileSystem::class);
-        $storage->expects($this->any())->method('upload')->with('/foo');
-    }
+    // Reset $_FILES superglobal
+    $_FILES['foo'] = array(
+      'name' => 'foo.txt',
+      'tmp_name' => $this->assetsDirectory . '/foo.txt',
+      'error' => 0
+    );
+  }
 
-    /**
-     * Test won't overwrite existing file
-     * @expectedException \Almuth\Upload\Exception
-     */
-    public function testWillNotOverwriteFile()
-    {
-        $storage = new \Almuth\Upload\Storage\FileSystem($this->assetsDirectory, false);
-        $storage->upload(new \Almuth\Upload\FileInfo('foo.txt', dirname(__DIR__) . '/assets/foo.txt'));
-    }
+  public function testInstantiationWithValidDirectory()
+  {
+    $storage = new FileSystem($this->uploadDir);
+    $this->assertInstanceOf(FileSystem::class, $storage);
+  }
 
-    /**
-     * Test will overwrite existing file
-     */
-    public function testWillOverwriteFile()
-    {
-        /*$storage = $this->getMock(
-            '\Almuth\Upload\Storage\FileSystem',
-            array('moveUploadedFile'),
-            array($this->assetsDirectory, true)
-        );*/
-		$storage = $this->createMock(\Almuth\Upload\Storage\FileSystem::class);
+  /**
+   * @expectedException \InvalidArgumentException
+   */
+  public function testInstantiationWithInvalidDirectory()
+  {
+    $this->expectException(InvalidArgumentException::class);
+    $storage = new FileSystem(__DIR__ . '/test');
+  }
 
-        $storage->expects($this->any())
-                ->method('moveUploadedFile')
-			    ->with($this->assetsDirectory, true)
-                ->will($this->returnValue(true));
+  /**
+   * Test won't overwrite existing file
+   * @expectedException \Almuth\Upload\Exception
+   */
+  public function testWillNotOverwriteFile()
+  {
+    $this->expectException(UploadException::class);
+    $storage = new FileSystem($this->assetsDirectory, false);
+    $storage->upload(new FileInfo(dirname(__DIR__) . '/assets/foo.txt'), 'foo.txt');
+  }
 
-        /*$fileInfo = $this->getMock(
-            '\Almuth\Upload\FileInfo',
-            array('isUploadedFile'),
-            array(dirname(__DIR__) . '/assets/foo.txt', 'foo.txt')
-        );*/
-		$fileInfo = $this->createMock(\Almuth\Upload\FileInfo::class);
-        $fileInfo->expects($this->any())
-             ->method('isUploadedFile')
-			 ->with(dirname(__DIR__) . '/assets/foo.txt', 'foo.txt')
-             ->will($this->returnValue(true));
+  /**
+   * Test will overwrite existing file
+   */
+  public function testWillOverwriteFile()
+  {
+    $storage = $this->getMockBuilder(FileSystem::class)
+      ->enableOriginalConstructor()
+      ->setConstructorArgs([$this->assetsDirectory, true])
+      ->onlyMethods(['moveUploadedFile'])
+      ->getMock();
 
-        $storage->upload($fileInfo);
-    }
+    $storage->expects($this->any())
+      ->method('moveUploadedFile')
+      //->with($this->assetsDirectory, true)
+      ->willReturn(true);
+
+    $fileInfo = $this->getMockBuilder(FileInfo::class)
+      ->enableOriginalConstructor()
+      ->setConstructorArgs([dirname(__DIR__) . '/assets/foo.txt', 'foo.txt'])
+      ->onlyMethods(['isUploadedFile'])
+      ->getMock();
+
+    $fileInfo->expects($this->any())
+      ->method('isUploadedFile')
+      ->willReturn(true);
+
+    $storage->upload($fileInfo);
+
+    $this->assertEquals('foo.txt', $fileInfo->getNameWithExtension());
+  }
 }

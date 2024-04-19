@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Upload
  *
@@ -28,60 +29,68 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 namespace Almuth\Upload\Storage;
 
+use Almuth\Upload\Exception;
 use Almuth\Upload\FileInfoInterface;
+use Almuth\Upload\StorageInterface;
 use Aws\S3\S3Client;
-use Aws\Exception\AwsException;
+use Aws\S3\Exception\S3Exception;
+use Aws\S3\S3ClientInterface;
 
 /**
  * FileSystem Storage
  *
  * This class uploads files to a designated directory on the filesystem.
  *
- * @author  Almuth <almuth@nusacart.com>
+ * @author  Almuth <almuth@perigi.my.id>
  * @since   1.4.5
  * @package Upload
  */
-class S3 implements \Almuth\Upload\StorageInterface
+class S3 implements StorageInterface
 {
-    protected $bucketName;
-    protected $client;
-    protected $folder;
+  protected string $bucketName;
+  protected S3ClientInterface $client;
+  protected string $folder;
+  protected string $acl;
 
-    /**
-     * Constructor
-     *
-     * @param  array     $s3options [profile,region,version]
-     * @param  string    $bucketName S3 bucket name
-     * @param  string    $folder folder ini s3 server
-     */
-    public function __construct(array $s3options, string $bucketName, string $folder = '')
-    {
-        $this->client = S3Client::factory($s3options);
-        $this->bucketName = $bucketName;
-        $this->folder = $folder;
+  /**
+   * Constructor
+   *
+   * @param  array     $s3ClientOptions [profile,region,version]
+   * @param  string    $bucketName S3 bucket name
+   * @param  string    $folder folder in s3 server
+   * @param  string    $acl object acl
+   */
+  public function __construct(array $s3ClientOptions, string $bucketName, string $folder = '', string $acl = 'public-read')
+  {
+    $this->client = new S3Client($s3ClientOptions);
+    $this->bucketName = $bucketName;
+    $this->folder = $folder;
+    $this->acl = $acl ?: 'public-read';
+  }
+
+  /**
+   * Upload
+   *
+   * @param  FileInfoInterface     $file The file object to upload
+   * @throws Exception          If error puting object to s3 server
+   */
+  public function upload(FileInfoInterface $fileInfo)
+  {
+    $key  = ($this->folder ? trim($this->folder, '/') . '/' : '') . $fileInfo->getNameWithExtension();
+    $file = $fileInfo->getPathname();
+
+    try {
+      $this->client->putObject([
+        'Bucket' => $this->bucketName,
+        'Key' => $key,
+        'SourceFile' => $file,
+        'ACL' => $this->acl
+      ]);
+    } catch (S3Exception $e) {
+      throw new Exception($e->getMessage(), $fileInfo);
     }
-
-    /**
-     * Upload
-     *
-     * @param  \Almuth\Upload\FileInfoInterface     $file The file object to upload
-     * @throws AwsException                         If error puting object to s3 server
-     */
-    public function upload(FileInfoInterface $fileInfo)
-    {
-        $key  = ($this->folder ? trim($this->folder, '/').'/':'').$fileInfo->getNameWithExtension();
-        $file = $fileInfo->getPathname();
-
-        try {
-            $result = $this->client->putObject([
-                'Bucket' => $this->bucketName,
-                'Key' => $key,
-                'SourceFile' => $file,
-            ]);
-        } catch (AwsException $e){
-            throw $e;
-        }
-    }
+  }
 }

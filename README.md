@@ -1,9 +1,5 @@
 # Upload
 
-[![Build Status](https://img.shields.io/travis/almuth/Upload.svg?style=flat-square)](https://travis-ci.org/almuth/Upload)
-[![Latest Version](https://img.shields.io/github/release/almuth/Upload.svg?style=flat-square)](https://github.com/almuth/Upload/releases)
-[![Total Downloads](https://img.shields.io/packagist/dt/almuth/upload.svg?style=flat-square)](https://packagist.org/almuth/upload)
-
 This component simplifies file validation and uploading.
 
 ## Usage
@@ -72,12 +68,13 @@ curl -s https://getcomposer.org/installer | php
 Require the package with composer:
 
 ```
-php composer.phar require codeguy/upload
+composer require almuth/upload
 ```
 
 ## Author
 
 [Josh Lockhart](https://github.com/codeguy)
+[Al Muth](https://github.com/almuth)
 
 ## License
 

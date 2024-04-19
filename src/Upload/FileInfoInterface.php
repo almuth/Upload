@@ -39,25 +39,25 @@ namespace Almuth\Upload;
  */
 interface FileInfoInterface
 {
-    public function getPathname();
+    public function getPathname() : string;
 
-    public function getName();
+    public function getName() : string;
 
-    public function setName($name);
+    public function setName(string $name) : self;
 
-    public function getExtension();
+    public function getExtension() : string;
 
-    public function setExtension($extension);
+    public function setExtension(string $extension) : self;
 
-    public function getNameWithExtension();
+    public function getNameWithExtension() : string;
 
-    public function getMimetype();
+    public function getMimetype() : string;
 
-    public function getSize();
+    public function getSize() : int|false;
 
-    public function getMd5();
+    public function getMd5() : string;
 
-    public function getDimensions();
+    public function getDimensions() : array;
 
-    public function isUploadedFile();
+    public function isUploadedFile() : bool;
 }

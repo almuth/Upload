@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Upload
  *
@@ -28,6 +29,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 namespace Almuth\Upload;
 
 /**
@@ -39,190 +41,191 @@ namespace Almuth\Upload;
  */
 class FileInfo extends \SplFileInfo implements FileInfoInterface
 {
-    /**
-     * Factory method that returns new instance of \FileInfoInterface
-     * @var callable
-     */
-    protected static $factory;
+  /**
+   * Factory method that returns new instance of \FileInfoInterface
+   * @var callable
+   */
+  protected static $factory;
 
-    /**
-     * File name (without extension)
-     * @var string
-     */
-    protected $name;
+  /**
+   * File name (without extension)
+   * @var string
+   */
+  protected string $name;
 
-    /**
-     * File extension (without dot prefix)
-     * @var string
-     */
-    protected $extension;
+  /**
+   * File extension (without dot prefix)
+   * @var string
+   */
+  protected string $extension;
 
-    /**
-     * File mimetype
-     * @var string
-     */
-    protected $mimetype;
+  /**
+   * File mimetype
+   * @var string
+   */
+  protected string $mimetype;
 
-    /**
-     * Constructor
-     *
-     * @param string $filePathname Absolute path to uploaded file on disk
-     * @param string $newName      Desired file name (with extension) of uploaded file
-     */
-    public function __construct($filePathname, $newName = null)
-    {
-        $desiredName = is_null($newName) ? $filePathname : $newName;
-        $this->setName(pathinfo($desiredName, PATHINFO_FILENAME));
-        $this->setExtension(pathinfo($desiredName, PATHINFO_EXTENSION));
+  /**
+   * Constructor
+   *
+   * @param string $filePathname Absolute path to uploaded file on disk
+   * @param string $newName      Desired file name (with extension) of uploaded file
+   */
+  public function __construct(string $filePathname, ?string $newName = null)
+  {
+    $desiredName = is_null($newName) ? $filePathname : $newName;
+    $this->setName(pathinfo($desiredName, PATHINFO_FILENAME));
+    $this->setExtension(pathinfo($desiredName, PATHINFO_EXTENSION));
 
-        parent::__construct($filePathname);
+    parent::__construct($filePathname);
+  }
+
+  /**
+   * Get file name (without extension)
+   *
+   * @return string
+   */
+  public function getName() : string
+  {
+    return $this->name;
+  }
+
+  /**
+   * Set file name (without extension)
+   *
+   * It also makes sure file name is safe
+   *
+   * @param  string           $name
+   * @return FileInfo Self
+   */
+  public function setName(string $name) : self
+  {
+    $name = preg_replace("/([^\w\s\d\-_~,;:\[\]\(\).]|[\.]{2,})/", "", $name);
+    $name = basename($name);
+    $this->name = $name;
+
+    return $this;
+  }
+
+  /**
+   * Get file extension (without dot prefix)
+   *
+   * @return string
+   */
+  public function getExtension() : string
+  {
+    return $this->extension;
+  }
+
+  /**
+   * Set file extension (without dot prefix)
+   *
+   * @param  string           $extension
+   * @return \Upload\FileInfo Self
+   */
+  public function setExtension(string $extension) : self
+  {
+    $this->extension = strtolower($extension);
+
+    return $this;
+  }
+
+  /**
+   * Get file name with extension
+   *
+   * @return string
+   */
+  public function getNameWithExtension() : string
+  {
+    return $this->extension === '' ? $this->name : sprintf('%s.%s', $this->name, $this->extension);
+  }
+
+  /**
+   * Get mimetype
+   *
+   * @return string
+   */
+  public function getMimetype() : string
+  {
+    if (isset($this->mimetype) === false) {
+      $finfo = new \finfo(FILEINFO_MIME);
+      $mimetype = $finfo->file($this->getPathname());
+      $mimetypeParts = preg_split('/\s*[;,]\s*/', $mimetype);
+      $this->mimetype = strtolower($mimetypeParts[0]);
+      unset($finfo);
     }
 
-    /**
-     * Get file name (without extension)
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
+    return $this->mimetype;
+  }
+
+  /**
+   * Get md5
+   *
+   * @return string
+   */
+  public function getMd5() : string
+  {
+    return md5_file($this->getPathname());
+  }
+
+  /**
+   * Get a specified hash
+   *
+   * @return string
+   */
+  public function getHash($algorithm = 'md5') : string
+  {
+    return hash_file($algorithm, $this->getPathname());
+  }
+
+  /**
+   * Get image dimensions
+   *
+   * @return array formatted array of dimensions
+   */
+  public function getDimensions() : array
+  {
+    list($width, $height) = getimagesize($this->getPathname());
+
+    return array(
+      'width' => $width,
+      'height' => $height
+    );
+  }
+
+  /**
+   * Is this file uploaded with a POST request?
+   *
+   * This is a separate method so that it can be stubbed in unit tests to avoid
+   * the hard dependency on the `is_uploaded_file` function.
+   *
+   * @return bool
+   */
+  public function isUploadedFile() : bool
+  {
+    return is_uploaded_file($this->getPathname());
+  }
+
+  public static function setFactory($callable) : void
+  {
+    if (is_object($callable) === false || method_exists($callable, '__invoke') === false) {
+      throw new \InvalidArgumentException('Callback is not a Closure or invokable object.');
     }
 
-    /**
-     * Set file name (without extension)
-     *
-     * It also makes sure file name is safe
-     *
-     * @param  string           $name
-     * @return \Upload\FileInfo Self
-     */
-    public function setName($name)
-    {
-        $name = preg_replace("/([^\w\s\d\-_~,;:\[\]\(\).]|[\.]{2,})/", "", $name);
-        $name = basename($name);
-        $this->name = $name;
+    static::$factory = $callable;
+  }
 
-        return $this;
+  public static function createFromFactory($tmpName, $name = null) : FileInfoInterface
+  {
+    if (isset(static::$factory) === true) {
+      $result = call_user_func_array(static::$factory, array($tmpName, $name));
+      if ($result instanceof FileInfoInterface === false) {
+        throw new \RuntimeException(sprintf('FileInfo factory must return instance of %s.', FileInfoInterface::class));
+      }
+
+      return $result;
     }
 
-    /**
-     * Get file extension (without dot prefix)
-     *
-     * @return string
-     */
-    public function getExtension()
-    {
-        return $this->extension;
-    }
-
-    /**
-     * Set file extension (without dot prefix)
-     *
-     * @param  string           $extension
-     * @return \Upload\FileInfo Self
-     */
-    public function setExtension($extension)
-    {
-        $this->extension = strtolower($extension);
-
-        return $this;
-    }
-
-    /**
-     * Get file name with extension
-     *
-     * @return string
-     */
-    public function getNameWithExtension()
-    {
-        return $this->extension === '' ? $this->name : sprintf('%s.%s', $this->name, $this->extension);
-    }
-
-    /**
-     * Get mimetype
-     *
-     * @return string
-     */
-    public function getMimetype()
-    {
-        if (isset($this->mimetype) === false) {
-            $finfo = new \finfo(FILEINFO_MIME);
-            $mimetype = $finfo->file($this->getPathname());
-            $mimetypeParts = preg_split('/\s*[;,]\s*/', $mimetype);
-            $this->mimetype = strtolower($mimetypeParts[0]);
-            unset($finfo);
-        }
-
-        return $this->mimetype;
-    }
-
-    /**
-     * Get md5
-     *
-     * @return string
-     */
-    public function getMd5()
-    {
-        return md5_file($this->getPathname());
-    }
-
-    /**
-     * Get a specified hash
-     *
-     * @return string
-     */
-    public function getHash($algorithm = 'md5')
-    {
-        return hash_file($algorithm, $this->getPathname());
-    }
-
-    /**
-     * Get image dimensions
-     *
-     * @return array formatted array of dimensions
-     */
-    public function getDimensions()
-    {
-        list($width, $height) = getimagesize($this->getPathname());
-
-        return array(
-            'width' => $width,
-            'height' => $height
-        );
-    }
-
-    /**
-     * Is this file uploaded with a POST request?
-     *
-     * This is a separate method so that it can be stubbed in unit tests to avoid
-     * the hard dependency on the `is_uploaded_file` function.
-     *
-     * @return bool
-     */
-    public function isUploadedFile()
-    {
-        return is_uploaded_file($this->getPathname());
-    }
-
-    public static function setFactory($callable)
-    {
-        if (is_object($callable) === false || method_exists($callable, '__invoke') === false) {
-            throw new \InvalidArgumentException('Callback is not a Closure or invokable object.');
-        }
-
-        static::$factory = $callable;
-    }
-
-    public static function createFromFactory($tmpName, $name = null) {
-        if (isset(static::$factory) === true) {
-            $result = call_user_func_array(static::$factory, array($tmpName, $name));
-            if ($result instanceof FileInfoInterface === false) {
-                throw new \RuntimeException('FileInfo factory must return instance of \Upload\FileInfoInterface.');
-            }
-
-            return $result;
-        }
-
-        return new static($tmpName, $name);
-    }
+    return new static($tmpName, $name);
+  }
 }

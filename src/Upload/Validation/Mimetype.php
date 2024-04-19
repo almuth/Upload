@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Upload
  *
@@ -28,11 +29,12 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 namespace Almuth\Upload\Validation;
 
-use \Almuth\Upload\ValidationInterface;
-use \Almuth\Upload\FileInfoInterface;
-use \Almuth\Upload\Exception;
+use Almuth\Upload\ValidationInterface;
+use Almuth\Upload\FileInfoInterface;
+use Almuth\Upload\Exception;
 
 /**
  * Validate Upload Media Type
@@ -45,35 +47,35 @@ use \Almuth\Upload\Exception;
  */
 class Mimetype implements ValidationInterface
 {
-    /**
-     * Valid media types
-     * @var array
-     */
-    protected $mimetypes;
+  /**
+   * Valid media types
+   * @var array
+   */
+  protected array $mimetypes;
 
-    /**
-     * Constructor
-     *
-     * @param string|array $mimetypes
-     */
-    public function __construct($mimetypes)
-    {
-        if (is_string($mimetypes) === true) {
-            $mimetypes = array($mimetypes);
-        }
-        $this->mimetypes = $mimetypes;
+  /**
+   * Constructor
+   *
+   * @param string|array $mimetypes
+   */
+  public function __construct($mimetypes)
+  {
+    if (is_string($mimetypes) === true) {
+      $mimetypes = [$mimetypes];
     }
+    $this->mimetypes = $mimetypes;
+  }
 
-    /**
-     * Validate
-     *
-     * @param  \Almuth\Upload\FileInfoInterface  $fileInfo
-     * @throws \RuntimeException          If validation fails
-     */
-    public function validate(FileInfoInterface $fileInfo)
-    {
-        if (in_array($fileInfo->getMimetype(), $this->mimetypes) === false) {
-            throw new Exception(sprintf('Invalid mimetype. Must be one of: %s', implode(', ', $this->mimetypes)), $fileInfo);
-        }
+  /**
+   * Validate
+   *
+   * @param  \Almuth\Upload\FileInfoInterface  $fileInfo
+   * @throws \RuntimeException          If validation fails
+   */
+  public function validate(FileInfoInterface $fileInfo)
+  {
+    if (in_array($fileInfo->getMimetype(), $this->mimetypes) === false) {
+      throw new Exception(sprintf('Invalid mimetype. Must be one of: %s', implode(', ', $this->mimetypes)), $fileInfo);
     }
+  }
 }

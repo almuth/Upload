@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Upload
  *
@@ -28,11 +29,12 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 namespace Almuth\Upload\Validation;
 
-use \Almuth\Upload\ValidationInterface;
-use \Almuth\Upload\FileInfoInterface;
-use \Almuth\Upload\Exception;
+use Almuth\Upload\ValidationInterface;
+use Almuth\Upload\FileInfoInterface;
+use Almuth\Upload\Exception;
 
 /**
  * Validate File Extension
@@ -47,40 +49,40 @@ use \Almuth\Upload\Exception;
  */
 class Extension implements ValidationInterface
 {
-    /**
-     * Array of acceptable file extensions without leading dots
-     * @var array
-     */
-    protected $allowedExtensions;
+  /**
+   * Array of acceptable file extensions without leading dots
+   * @var array
+   */
+  protected array $allowedExtensions;
 
-    /**
-     * Constructor
-     *
-     * @param string|array $allowedExtensions Allowed file extensions
-     * @example new \Almuth\Upload\Validation\Extension(array('png','jpg','gif'))
-     * @example new \Almuth\Upload\Validation\Extension('png')
-     */
-    public function __construct($allowedExtensions)
-    {
-        if (is_string($allowedExtensions) === true) {
-            $allowedExtensions = array($allowedExtensions);
-        }
-
-        $this->allowedExtensions = array_map('strtolower', $allowedExtensions);
+  /**
+   * Constructor
+   *
+   * @param string|array $allowedExtensions Allowed file extensions
+   * @example new \Almuth\Upload\Validation\Extension(array('png','jpg','gif'))
+   * @example new \Almuth\Upload\Validation\Extension('png')
+   */
+  public function __construct($allowedExtensions)
+  {
+    if (is_string($allowedExtensions) === true) {
+      $allowedExtensions = [$allowedExtensions];
     }
 
-    /**
-     * Validate
-     *
-     * @param  \Almuth\Upload\FileInfoInterface $fileInfo
-     * @throws \RuntimeException         If validation fails
-     */
-    public function validate(FileInfoInterface $fileInfo)
-    {
-        $fileExtension = strtolower($fileInfo->getExtension());
+    $this->allowedExtensions = array_map('strtolower', $allowedExtensions);
+  }
 
-        if (in_array($fileExtension, $this->allowedExtensions) === false) {
-            throw new Exception(sprintf('Invalid file extension. Must be one of: %s', implode(', ', $this->allowedExtensions)), $fileInfo);
-        }
+  /**
+   * Validate
+   *
+   * @param  \Almuth\Upload\FileInfoInterface $fileInfo
+   * @throws \RuntimeException         If validation fails
+   */
+  public function validate(FileInfoInterface $fileInfo)
+  {
+    $fileExtension = strtolower($fileInfo->getExtension());
+
+    if (in_array($fileExtension, $this->allowedExtensions) === false) {
+      throw new Exception(sprintf('Invalid file extension. Must be one of: %s', implode(', ', $this->allowedExtensions)), $fileInfo);
     }
+  }
 }

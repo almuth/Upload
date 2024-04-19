@@ -5,9 +5,8 @@ use Almuth\Upload\FileInfo;
 
 class FileInfoTest extends TestCase
 {
-    protected $fileWithExtension;
-
-    protected $fileWithoutExtension;
+    protected FileInfo $fileWithExtension;
+    protected FileInfo $fileWithoutExtension;
 
     public function setUp():void
     {
@@ -17,11 +16,11 @@ class FileInfoTest extends TestCase
 
     public function testConstructor()
     {
-        $this->assertAttributeEquals('foo', 'name', $this->fileWithExtension);
-        $this->assertAttributeEquals('txt', 'extension', $this->fileWithExtension);
+        $this->assertEquals('foo', $this->fileWithExtension->getName());
+        $this->assertEquals('txt', $this->fileWithExtension->getExtension());
 
-        $this->assertAttributeEquals('foo_wo_ext', 'name', $this->fileWithoutExtension);
-        $this->assertAttributeEquals('', 'extension', $this->fileWithoutExtension);
+        $this->assertEquals('foo_wo_ext', $this->fileWithoutExtension->getName());
+        $this->assertEquals('', $this->fileWithoutExtension->getExtension());
     }
 
     public function testGetName()
@@ -37,7 +36,7 @@ class FileInfoTest extends TestCase
     {
         $this->fileWithExtension->setName('bar');
 
-        $this->assertAttributeEquals('bar', 'name', $this->fileWithExtension);
+        $this->assertEquals('bar', $this->fileWithExtension->getName());
     }
 
     public function testGetNameWithExtension()
@@ -56,7 +55,7 @@ class FileInfoTest extends TestCase
     {
         $this->fileWithExtension->setExtension('csv');
 
-        $this->assertAttributeEquals('csv', 'extension', $this->fileWithExtension);
+        $this->assertEquals('csv', $this->fileWithExtension->getExtension());
     }
 
     public function testGetMimetype()

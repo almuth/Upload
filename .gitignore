@@ -1,5 +1,8 @@
 composer.lock
+*.cache
+*.bak
 tests/s3options.php
+tests/assets/uploads
 vendor/
 .idea
 .DS_Store

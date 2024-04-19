@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Upload
  *
@@ -28,6 +29,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 namespace Almuth\Upload;
 
 /**
@@ -39,14 +41,14 @@ namespace Almuth\Upload;
  */
 interface ValidationInterface
 {
-    /**
-     * Validate file
-     *
-     * This method is responsible for validating an `\Upload\FileInfoInterface` instance.
-     * If validation fails, an exception should be thrown.
-     *
-     * @param  \Upload\FileInfoInterface $fileInfo
-     * @throws \Exception                If validation fails
-     */
-    public function validate(\Almuth\Upload\FileInfoInterface $fileInfo);
+  /**
+   * Validate file
+   *
+   * This method is responsible for validating an `\Upload\FileInfoInterface` instance.
+   * If validation fails, an exception should be thrown.
+   *
+   * @param  \Upload\FileInfoInterface $fileInfo
+   * @throws \Exception                If validation fails
+   */
+  public function validate(FileInfoInterface $fileInfo);
 }

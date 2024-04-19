@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Upload
  *
@@ -28,12 +29,13 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 namespace Almuth\Upload\Validation;
 
-use \Almuth\Upload\ValidationInterface;
-use \Almuth\Upload\FileInfoInterface;
-use \Almuth\Upload\File;
-use \Almuth\Upload\Exception;
+use Almuth\Upload\ValidationInterface;
+use Almuth\Upload\FileInfoInterface;
+use Almuth\Upload\File;
+use Almuth\Upload\Exception;
 
 /**
  * Validate Upload File Size
@@ -48,53 +50,53 @@ use \Almuth\Upload\Exception;
  */
 class Size implements ValidationInterface
 {
-    /**
-     * Minimum acceptable file size (bytes)
-     * @var int
-     */
-    protected $minSize;
+  /**
+   * Minimum acceptable file size (bytes)
+   * @var int
+   */
+  protected int $minSize;
 
-    /**
-     * Maximum acceptable file size (bytes)
-     * @var int
-     */
-    protected $maxSize;
+  /**
+   * Maximum acceptable file size (bytes)
+   * @var int
+   */
+  protected int $maxSize;
 
-    /**
-     * Constructor
-     *
-     * @param int $maxSize Maximum acceptable file size in bytes (inclusive)
-     * @param int $minSize Minimum acceptable file size in bytes (inclusive)
-     */
-    public function __construct($maxSize, $minSize = 0)
-    {
-        if (is_string($maxSize)) {
-            $maxSize = File::humanReadableToBytes($maxSize);
-        }
-        $this->maxSize = $maxSize;
+  /**
+   * Constructor
+   *
+   * @param int $maxSize Maximum acceptable file size in bytes (inclusive)
+   * @param int $minSize Minimum acceptable file size in bytes (inclusive)
+   */
+  public function __construct(int|string $maxSize, int|string $minSize = 0)
+  {
+    if (is_string($maxSize)) {
+      $maxSize = File::humanReadableToBytes($maxSize);
+    }
+    $this->maxSize = $maxSize;
 
-        if (is_string($minSize)) {
-            $minSize = File::humanReadableToBytes($minSize);
-        }
-        $this->minSize = $minSize;
+    if (is_string($minSize)) {
+      $minSize = File::humanReadableToBytes($minSize);
+    }
+    $this->minSize = $minSize;
+  }
+
+  /**
+   * Validate
+   *
+   * @param  \Almuth\Upload\FileInfoInterface  $fileInfo
+   * @throws \RuntimeException          If validation fails
+   */
+  public function validate(FileInfoInterface $fileInfo)
+  {
+    $fileSize = $fileInfo->getSize();
+
+    if ($fileSize < $this->minSize) {
+      throw new Exception(sprintf('File size is too small. Must be greater than or equal to: %s', $this->minSize), $fileInfo);
     }
 
-    /**
-     * Validate
-     *
-     * @param  \Almuth\Upload\FileInfoInterface  $fileInfo
-     * @throws \RuntimeException          If validation fails
-     */
-    public function validate(FileInfoInterface $fileInfo)
-    {
-        $fileSize = $fileInfo->getSize();
-
-        if ($fileSize < $this->minSize) {
-            throw new Exception(sprintf('File size is too small. Must be greater than or equal to: %s', $this->minSize), $fileInfo);
-        }
-
-        if ($fileSize > $this->maxSize) {
-            throw new Exception(sprintf('File size is too large. Must be less than: %s', $this->maxSize), $fileInfo);
-        }
+    if ($fileSize > $this->maxSize) {
+      throw new Exception(sprintf('File size is too large. Must be less than: %s', $this->maxSize), $fileInfo);
     }
+  }
 }

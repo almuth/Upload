@@ -1,43 +1,59 @@
 <?php
+
+use Almuth\Upload\Exception;
+use Almuth\Upload\File;
+use Almuth\Upload\FileInfo;
+use Almuth\Upload\Validation\Size;
 use PHPUnit\Framework\TestCase;
+
 class SizeTest extends TestCase
 {
-    public function setUp():void
-    {
-        $this->assetsDirectory = dirname(__DIR__) . '/assets';
-    }
+  private $assetsDirectory;
 
-    public function testValidFileSize()
-    {
-        $file = new \Almuth\Upload\FileInfo($this->assetsDirectory . '/foo.txt', 'foo.txt');
-        $validation = new \Almuth\Upload\Validation\Size(500);
-        $validation->validate($file); // <-- SHOULD NOT throw exception
-    }
+  public function setUp(): void
+  {
+    $this->assetsDirectory = dirname(__DIR__) . '/assets';
+  }
 
-    public function testValidFileSizeWithHumanReadableArgument()
-    {
-        $file = new \Almuth\Upload\FileInfo($this->assetsDirectory . '/foo.txt', 'foo.txt');
-        $validation = new \Almuth\Upload\Validation\Size('500B');
-        $validation->validate($file); // <-- SHOULD NOT throw exception
-    }
+  public function testValidFileSize()
+  {
+    $file = new FileInfo($this->assetsDirectory . '/foo.txt', 'foo.txt');
+    $validation = new Size(500);
+    $validation->validate($file); // <-- SHOULD NOT throw exception
 
-    /**
-     * @expectedException \Almuth\Upload\Exception
-     */
-    public function testInvalidFileSize()
-    {
-        $file = new \Almuth\Upload\FileInfo($this->assetsDirectory . '/foo.txt', 'foo.txt');
-        $validation = new \Almuth\Upload\Validation\Size(400);
-        $validation->validate($file); // <-- SHOULD throw exception
-    }
+    $this->expectNotToPerformAssertions();
+  }
 
-    /**
-     * @expectedException \Almuth\Upload\Exception
-     */
-    public function testInvalidFileSizeWithHumanReadableArgument()
-    {
-        $file = new \Almuth\Upload\FileInfo($this->assetsDirectory . '/foo.txt', 'foo.txt');
-        $validation = new \Almuth\Upload\Validation\Size('400B');
-        $validation->validate($file); // <-- SHOULD throw exception
-    }
+  public function testValidFileSizeWithHumanReadableArgument()
+  {
+    $file = new FileInfo($this->assetsDirectory . '/foo.txt', 'foo.txt');
+    $validation = new Size('500B');
+    $validation->validate($file); // <-- SHOULD NOT throw exception
+
+    $this->expectNotToPerformAssertions();
+  }
+
+  /**
+   * @expectedException \Almuth\Upload\Exception
+   */
+  public function testInvalidFileSize()
+  {
+    $file = new FileInfo($this->assetsDirectory . '/foo.txt', 'foo.txt');
+    $validation = new Size(400);
+
+    $this->expectException(Exception::class);
+    $validation->validate($file); // <-- SHOULD throw exception
+  }
+
+  /**
+   * @expectedException \Almuth\Upload\Exception
+   */
+  public function testInvalidFileSizeWithHumanReadableArgument()
+  {
+    $file = new FileInfo($this->assetsDirectory . '/foo.txt', 'foo.txt');
+    $validation = new Size('400B');
+
+    $this->expectException(Exception::class);
+    $validation->validate($file); // <-- SHOULD throw exception
+  }
 }

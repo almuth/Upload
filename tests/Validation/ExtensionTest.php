@@ -1,27 +1,37 @@
 <?php
+
+use Almuth\Upload\Exception;
+use Almuth\Upload\FileInfo;
+use Almuth\Upload\Validation\Extension;
 use PHPUnit\Framework\TestCase;
 
 class ExtensionTest extends TestCase
 {
-    public function setUp():void
-    {
-        $this->assetsDirectory = dirname(__DIR__) . '/assets';
-    }
+  private $assetsDirectory;
 
-    public function testValidExtension()
-    {
-        $file = new \Almuth\Upload\FileInfo($this->assetsDirectory . '/foo.txt', 'foo.txt');
-        $validation = new \Almuth\Upload\Validation\Extension('txt');
-        $validation->validate($file); // <-- SHOULD NOT throw exception
-    }
+  public function setUp(): void
+  {
+    $this->assetsDirectory = dirname(__DIR__) . '/assets';
+  }
 
-    /**
-     * @expectedException \Almuth\Upload\Exception
-     */
-    public function testInvalidExtension()
-    {
-        $file = new \Almuth\Upload\FileInfo($this->assetsDirectory . '/foo_wo_ext', 'foo_wo_ext');
-        $validation = new \Almuth\Upload\Validation\Extension('txt');
-        $validation->validate($file); // <-- SHOULD throw exception
-    }
+  public function testValidExtension()
+  {
+    $file = new FileInfo($this->assetsDirectory . '/foo.txt', 'foo.txt');
+    $validation = new Extension('txt');
+    $validation->validate($file); // <-- SHOULD NOT throw exception
+
+    $this->expectNotToPerformAssertions();
+  }
+
+  /**
+   * @expectedException \Almuth\Upload\Exception
+   */
+  public function testInvalidExtension()
+  {
+    $file = new FileInfo($this->assetsDirectory . '/foo_wo_ext', 'foo_wo_ext');
+    $validation = new Extension('txt');
+
+    $this->expectException(Exception::class);
+    $validation->validate($file); // <-- SHOULD throw exception
+  }
 }
